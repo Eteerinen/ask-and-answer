@@ -7,39 +7,43 @@
 	</head>
 	<body>
 		<!-- Ask & Answer Game(Version1: Only for JavaScript console) written by Eteerinen finished on Oct.12th 18:38-->
+		<!-- Ask & Answer Game(Version2&3: Full functionality but without CSS styles) written by Eteerinen finished on Oct.14th 18:25-->
 		<h1>Do you really know about Finland?</h1>
-		<h2>Updating for the frontend right now...</h2>
-		<div><button id="give_rd_qs"><h2>Show a Random Question</h2></button></div>
-		<div id="show_title"><h2>title</h2></div>
-		<div id="show_answers"><h3>answers ABCD</h3></div>
+		<div><button id="show_rd_qs"><h2>Show a Random Question</h2></button></div>
+		<h2><div id="show_title"></div></h2>
+		<!-- don't need show answers div anymore -->
 		<div>
 			<form id="quiz">
 				<div>
 					<label class="option">
 						<input type="radio" name="answer" value="A"/>
-						<h3 id="question_A">Option A</h3>
+						<h3 id="option_a"></h3>
 					</label>
 				</div>
 				<div>
 					<label class="option">
 						<input type="radio" name="answer" value="B"/>
-						<h3 id="question_B">Option B</h3>
+						<h3 id="option_b"></h3>
 					</label>
 				</div>
 				<div>
 					<label class="option">
 						<input type="radio" name="answer" value="C"/>
-						<h3 id="question_C">Option C</h3>
+						<h3 id="option_c"></h3>
 					</label>
 				</div>
 				<div>
 					<label class="option">
 						<input type="radio" name="answer" value="D"/>
-						<h3 id="question_D">Option D</h3>
+						<h3 id="option_d"></h3>
 					</label>
 				</div>
 			</form>
 		</div>
+		<h2><div id="show_result"></div></h2>
+		
+		
+		<!-- SCRIPT -->
 		<script>
 			let questions = {
 			  1001: {
@@ -168,7 +172,17 @@
 				return selected_question;
 			}
 			
-			function getMyAnswer(selected_question, my_answer_letter){
+			function getTitle(selected_question){
+				let title = selected_question.name;
+				return title;
+			}
+			
+			function getAnswers(selected_question){
+				let answer_array = selected_question["all_answers"];
+				return answer_array;
+			}
+			
+			function getCorrectAnswerLetter(selected_question){
 				let correct_answer = selected_question["correct_answer"];
 				let answers = selected_question["all_answers"];
 				const index = answers.indexOf(correct_answer);		// Knowing the position of correct answer
@@ -189,13 +203,13 @@
 						letter_option = "D";
 						break;
 				}
-				let result = "";
-				if(my_answer_letter === letter_option){
-					result = "You're right!";
-				}else{
-					result = "You're wrong!";
-				}
-				return result;
+				// let result = "";
+				// if(my_answer_letter === letter_option){
+				// 	result = "You're right!";
+				// }else{
+				// 	result = "You're wrong!";
+				// }
+				return letter_option;
 			}
 			
 			// 1. Test for length of the Object
@@ -214,18 +228,67 @@
 			// 6. Update getMyAnswer funtion, added ABCD
 			// console.log(getMyAnswer(questions[1002],"C"));
 			// Test for 2 methods again
-			let selected_question = getRandomQuestion(questions);
-			console.log(getMyAnswer(selected_question,"B"));
+			// let selected_question = getRandomQuestion(questions);
+			// console.log(getMyAnswer(selected_question,"B"));
 			
-			// Let the console know the answer
-			const quiz = document.getElementById("quiz");
+			// 7. Test for interactions -- log the chosen answer to the console
+			// const quiz = document.getElementById("quiz");
+			// quiz.addEventListener("change", (event) => {
+			//   const chosen = event.target.value; // "A", "B", "C", or "D"
+			//   console.log("You chose:", chosen);
+			// });	
+			// document.addEventListener("click", (e) => console.log("clicked:", e.target));
 			
-			quiz.addEventListener("change", (event) => {
-			  const chosen = event.target.value; // "A", "B", "C", or "D"
-			  console.log("You chose:", chosen);
+			
+			
+			
+			// ETEERINEN(for highlight)
+			// 8. Test for showQsButton clicking
+			const showQsButton = document.getElementById("show_rd_qs");		// showQsButton → <button id="show_rd_qs">
+			const resultDiv1 = document.getElementById("show_title");		// resultDiv1    → <div id="show_answers">
+			// const resultDiv2 = document.getElementById("show_answers");		// resultDiv2    → <div id="show_show_answers">
+			// 4 Options
+			const opt_a = document.getElementById("option_a");
+			const opt_b = document.getElementById("option_b");
+			const opt_c = document.getElementById("option_c");
+			const opt_d = document.getElementById("option_d");
+			// Random Question
+			let random_question="";
+			// Result Box
+			let result_box = document.getElementById("show_result");
+			// Click -- Show the contents in resultDiv
+			showQsButton.addEventListener("click", function() {
+				// Call the function - getRandomQuestion
+				random_question = getRandomQuestion(questions);
+				const title = getTitle(random_question); 	// Call the function - getTitle
+				resultDiv1.textContent = title;
+				// ARRAY
+				const answer_arr = getAnswers(random_question);		// Call the function - getAnswers
+				// So ugly(Abandoned plan)
+				// resultDiv2.textContent = "A: "+answer_arr[0]+"B: "+answer_arr[1]+"C: "+answer_arr[2]+"D: "+answer_arr[3];
+			    // New plan
+				opt_a.textContent = "A: " + answer_arr[0];
+				opt_b.textContent = "B: " + answer_arr[1];
+				opt_c.textContent = "C: " + answer_arr[2];
+				opt_d.textContent = "D: " + answer_arr[3];
+
+				result_box.textContent = "";		// Clear the previous result
+				check_quiz.reset();		// Uncheck the previously selected radio button
 			});
 			
-			document.addEventListener("click", (e) => console.log("clicked:", e.target));
+			// 9. Test for checking if you are right
+			const check_quiz = document.getElementById("quiz");
+			check_quiz.addEventListener("change", (event) => {
+				const your_option = event.target.value; // "A", "B", "C", or "D"
+				const correct_answer = getCorrectAnswerLetter(random_question);
+				if(your_option === correct_answer){
+					result_box.textContent = "You're right!";
+					console.log("T");
+				}else{
+					result_box.textContent = "You're wrong!"
+					console.log("F");
+				}
+			});
 		</script>
 	</body>
 </html>
