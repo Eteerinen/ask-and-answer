@@ -1,13 +1,45 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<link rel="stylesheet" href="style.css">
 		<meta charset="utf-8">
 		<title>Ask and Answer</title>
 	</head>
 	<body>
 		<!-- Ask & Answer Game(Version1: Only for JavaScript console) written by Eteerinen finished on Oct.12th 18:38-->
 		<h1>Do you really know about Finland?</h1>
-		<h2>Updating...Only for JavaScript console right now</h2>
+		<h2>Updating for the frontend right now...</h2>
+		<div><button id="give_rd_qs"><h2>Show a Random Question</h2></button></div>
+		<div id="show_title"><h2>title</h2></div>
+		<div id="show_answers"><h3>answers ABCD</h3></div>
+		<div>
+			<form id="quiz">
+				<div>
+					<label class="option">
+						<input type="radio" name="answer" value="A"/>
+						<h3 id="question_A">Option A</h3>
+					</label>
+				</div>
+				<div>
+					<label class="option">
+						<input type="radio" name="answer" value="B"/>
+						<h3 id="question_B">Option B</h3>
+					</label>
+				</div>
+				<div>
+					<label class="option">
+						<input type="radio" name="answer" value="C"/>
+						<h3 id="question_C">Option C</h3>
+					</label>
+				</div>
+				<div>
+					<label class="option">
+						<input type="radio" name="answer" value="D"/>
+						<h3 id="question_D">Option D</h3>
+					</label>
+				</div>
+			</form>
+		</div>
 		<script>
 			let questions = {
 			  1001: {
@@ -184,6 +216,16 @@
 			// Test for 2 methods again
 			let selected_question = getRandomQuestion(questions);
 			console.log(getMyAnswer(selected_question,"B"));
+			
+			// Let the console know the answer
+			const quiz = document.getElementById("quiz");
+			
+			quiz.addEventListener("change", (event) => {
+			  const chosen = event.target.value; // "A", "B", "C", or "D"
+			  console.log("You chose:", chosen);
+			});
+			
+			document.addEventListener("click", (e) => console.log("clicked:", e.target));
 		</script>
 	</body>
 </html>
